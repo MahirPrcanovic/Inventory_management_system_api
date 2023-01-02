@@ -31,7 +31,6 @@ const supplierSchema = new mongoose.Schema({
   },
   dateOfEnd: {
     type: Date,
-    required: true,
   },
   materials: [
     {

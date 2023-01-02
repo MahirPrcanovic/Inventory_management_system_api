@@ -27,7 +27,7 @@ exports.addProducts = async (req, res) => {
   } catch (err) {
     return console.log(err);
   }
-  return res.status(200).json({ product1 });
+  return res.status(201).json({ product1 });
 };
 
 exports.updateProducts = async (req, res) => {
