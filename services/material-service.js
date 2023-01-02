@@ -51,16 +51,18 @@ exports.getSingleMaterial = async (req, res) => {
   }
   return res.status(200).json({ material });
 };
-exports.updateSupplier = async (req, res) => {
+exports.updateMaterial = async (req, res) => {
   const id = req.params.id;
-  let updatedSupplier;
+  let updatedMaterial;
   try {
-    updatedSupplier = await Supplier.findByIdAndUpdate(id, req.body);
+    updatedMaterial = await Material.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
-  if (!updatedSupplier) {
+  if (!updatedMaterial) {
     return res.status(404).json({ message: "Material not found." });
   }
-  return res.status(200).json({ updatedSupplier });
+  return res.status(200).json({ updatedMaterial });
 };

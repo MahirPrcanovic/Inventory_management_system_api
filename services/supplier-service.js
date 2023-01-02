@@ -46,7 +46,9 @@ exports.updateSupplier = async (req, res) => {
   const id = req.params.id;
   let updatedSupplier;
   try {
-    updatedSupplier = await Supplier.findByIdAndUpdate(id, req.body);
+    updatedSupplier = await Supplier.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

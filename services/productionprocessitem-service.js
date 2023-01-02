@@ -28,7 +28,9 @@ exports.getSingleItem = async (req, res) => {
 exports.updateItem = async (req, res) => {
   const id = req.params.id;
   try {
-    const item = await ProductionProcessItem.findByIdAndUpdate(id, req.body);
+    const item = await ProductionProcessItem.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!item)
       return res.status(404).json({ message: "Item could not be found." });
     return res.status(201).json({ item });
