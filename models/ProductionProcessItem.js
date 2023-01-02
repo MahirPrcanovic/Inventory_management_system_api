@@ -11,6 +11,10 @@ const productionProcessItemScheme = new mongoose.Schema({
       ref: "ProductionProcess",
     },
   ],
+  material: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Material",
+  },
 });
 
 module.exports = mongoose.model(

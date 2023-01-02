@@ -11,7 +11,7 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-exports.addProducts = async (req, res) => {
+exports.createNewProduct = async (req, res) => {
   const { name, picUrl, price, profitMargin } = req.body;
   const product1 = new Product({
     name,
@@ -27,7 +27,7 @@ exports.addProducts = async (req, res) => {
   return res.status(201).json({ product1 });
 };
 
-exports.updateProducts = async (req, res) => {
+exports.updateProduct = async (req, res) => {
   var product = await Product.findById(req.params.id);
   console.log(product);
   if (!product) res.status(400).json({ message: "Product not found." });
@@ -51,7 +51,7 @@ exports.updateProducts = async (req, res) => {
   }
 };
 
-exports.getById = async (req, res) => {
+exports.getSingleProduct = async (req, res) => {
   const id = req.params.id;
   let product1;
   try {

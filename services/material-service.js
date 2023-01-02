@@ -6,6 +6,7 @@ exports.getAllMaterials = async (req, res) => {
     materials = await Material.find({}).select(
       "name quantity price isUsed supplier"
     );
+    return res.status(200).json({ materials });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
