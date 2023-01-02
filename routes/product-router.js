@@ -1,13 +1,13 @@
 // const productController = require("../controllers/products-controller");
 // import { getAllProducts } from "../controllers/products-controller";
-const Product = require("../controllers/products-controller");
+const productService = require("../controllers/products-service");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", Product.getAllProducts);
-router.post("/", Product.addProducts);
-router.patch("/:id", Product.updateProducts);
-router.get("/:id", Product.getById);
-router.delete("/:id", Product.deleteProduct);
+router.get("/", productService.getAllProducts);
+router.post("/", productService.addProducts);
+router.patch("/:id", productService.updateProducts);
+router.get("/:id", productService.getById);
+router.delete("/:id", productService.deleteProduct);
 
 module.exports = router;
