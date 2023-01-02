@@ -1,6 +1,6 @@
 // const productController = require("../controllers/products-controller");
 // import { getAllProducts } from "../controllers/products-controller";
-const productService = require("../controllers/products-service");
+const productService = require("../services/products-service");
 const express = require("express");
 const router = express.Router();
 

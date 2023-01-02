@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const supplierService = require("../controllers/supplier-service");
+const supplierService = require("../services/supplier-service");
 
 router.get("/", supplierService.getAllSuppliers);
 router.post("/", supplierService.createSupplier);

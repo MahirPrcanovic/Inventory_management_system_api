@@ -5,13 +5,10 @@ exports.getAllProducts = async (req, res) => {
   let products;
   try {
     products = await Product.find();
+    return res.status(200).json({ products });
   } catch (err) {
-    return console.log(err);
+    return res.status(500).json({ message: err.message });
   }
-  if (!products) {
-    return res.status(404).json({ message: "No products found" });
-  }
-  return res.status(200).json({ products });
 };
 
 exports.addProducts = async (req, res) => {
