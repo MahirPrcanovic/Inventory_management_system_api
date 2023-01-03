@@ -59,7 +59,7 @@ exports.updateMaterial = async (req, res) => {
       new: true,
     });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
   if (!updatedMaterial) {
     return res.status(404).json({ message: "Material not found." });

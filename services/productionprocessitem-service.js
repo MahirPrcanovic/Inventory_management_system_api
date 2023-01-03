@@ -10,7 +10,7 @@ exports.createNewItem = async (req, res) => {
     const createdItem = await newItem.save();
     return res.status(201).json({ createdItem });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 };
 exports.getSingleItem = async (req, res) => {

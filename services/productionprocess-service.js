@@ -65,6 +65,6 @@ exports.updateProcess = async (req, res) => {
     });
     return res.status(200).json({ returnItem });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 };

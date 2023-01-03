@@ -12,42 +12,33 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.createNewProduct = async (req, res) => {
-  const { name, picUrl, price, profitMargin } = req.body;
-  const product1 = new Product({
+  const { name, picUrl, price, profitMargin, productionProcess } = req.body;
+  const newProduct = new Product({
     name,
     picUrl,
     price,
     profitMargin,
+    productionProcess,
   });
   try {
-    await product1.save();
+    await newProduct.save();
   } catch (err) {
-    return console.log(err);
+    return res.status(400).json({ message: err.message });
   }
-  return res.status(201).json({ product1 });
+  return res.status(201).json({ newProduct });
 };
 
 exports.updateProduct = async (req, res) => {
-  var product = await Product.findById(req.params.id);
-  console.log(product);
-  if (!product) res.status(400).json({ message: "Product not found." });
-  if (req.body.name != null) {
-    product.name = req.body.name;
-  }
-  if (req.body.picUrl != null) {
-    product.picUrl = req.body.picUrl;
-  }
-  if (req.body.profitMargin != null) {
-    product.profitMargin = req.body.profitMargin;
-  }
-  if (req.body.price != null) {
-    product.price = req.body.price;
-  }
   try {
-    const updatedProduct = await product.save();
-    res.json(updatedProduct);
-  } catch (error) {
-    res.status(400).json({ message: err.message });
+    const updatedItem = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.params.body
+    );
+    if (!updatedItem)
+      return res.status(400).json({ message: "Item does not exist." });
+    return res.status(201).json({ updatedItem });
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
   }
 };
 

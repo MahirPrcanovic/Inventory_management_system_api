@@ -20,6 +20,7 @@ const productScheme = new mongoose.Schema({
   productionProcess: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ProductionProcess",
+    required: true,
   },
 });
 
