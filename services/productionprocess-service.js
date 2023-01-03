@@ -1,6 +1,15 @@
+const { populate } = require("../models/ProductionProcess");
 const ProductionProcess = require("../models/ProductionProcess");
-const ProductionItem = require("../models/ProductionProcessItem");
-const Material = require("../models/Material");
+
+exports.getAllProcesses = async (req, res) => {
+  let processes;
+  try {
+    processes = await ProductionProcess.find();
+    return res.status(200).json({ processes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 exports.createNewProcess = async (req, res) => {
   const { name, items } = req.body;
   const newProcess = new ProductionProcess({
@@ -24,5 +33,38 @@ exports.createNewProcess = async (req, res) => {
     return res.status(200).json({ createdItem });
   } catch (err) {
     return res.status(400).json({ message: err.message });
+  }
+};
+exports.updateProcess = async (req, res) => {
+  const id = req.params.id;
+  let updatedItem;
+  try {
+    if (!req.body.items) {
+      updatedItem = await ProductionProcess.findByIdAndUpdate(id, req.body);
+      return res.status(200).json({ updatedItem });
+    }
+    const updateItem = await ProductionProcess.findById(id).populate();
+    const arra = updateItem.productionProcessItems.map((el) => el.toString());
+    req.body.items.forEach((e) => arra.push(e));
+    updateItem.productionProcessItems = [...new Set(arra)];
+    const updated = await (
+      await updateItem.save()
+    ).populate({
+      path: "productionProcessItems",
+      populate: { path: "material" },
+    });
+    let price = 0;
+    updated.productionProcessItems.map(
+      (item) => (price += item.quantity * item.material.price)
+    );
+    updated.price = price;
+    if (req.body.name) updated.name = req.body.name;
+    if (req.body.endDate) updated.endDate = req.body.endDate;
+    const returnItem = await ProductionProcess.findByIdAndUpdate(id, updated, {
+      new: true,
+    });
+    return res.status(200).json({ returnItem });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };
