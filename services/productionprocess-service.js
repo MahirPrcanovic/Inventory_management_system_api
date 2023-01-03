@@ -1,4 +1,3 @@
-const { populate } = require("../models/ProductionProcess");
 const ProductionProcess = require("../models/ProductionProcess");
 
 exports.getAllProcesses = async (req, res) => {
@@ -11,6 +10,16 @@ exports.getAllProcesses = async (req, res) => {
   }
 };
 exports.createNewProcess = async (req, res) => {
+  const currentProcessActive = await ProductionProcess.findOne({
+    endDate: null,
+  });
+  if (currentProcessActive)
+    return res
+      .status(400)
+      .json({
+        message:
+          "There is currently an active process, please end it before creating one.",
+      });
   const { name, items } = req.body;
   const newProcess = new ProductionProcess({
     name,
