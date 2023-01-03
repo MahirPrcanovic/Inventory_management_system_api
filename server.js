@@ -3,8 +3,8 @@ const productRouter = require("./routes/product-router");
 const supplierRouter = require("./routes/supplier-router");
 const materialRouter = require("./routes/material-router");
 const productionItem = require("./routes/productionprocessitem-router");
+const processRouter = require("./routes/productionprocess-router");
 const express = require("express");
-const testRouter = require("./routes/testRouter");
 const app = express();
 const mongoose = require("mongoose");
 
@@ -18,4 +18,5 @@ app.use("/products", productRouter);
 app.use("/suppliers", supplierRouter);
 app.use("/materials", materialRouter);
 app.use("/processItem", productionItem);
+app.use("/process", processRouter);
 app.listen(3000, () => console.log("Server started"));

@@ -5,6 +5,7 @@ exports.getAllSuppliers = async (req, res) => {
     const suppliers = await Supplier.find({}).select(
       "name phoneNumber email uin"
     );
+
     return res.status(200).json(suppliers);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -12,7 +13,8 @@ exports.getAllSuppliers = async (req, res) => {
 };
 
 exports.createSupplier = async (req, res) => {
-  const { name, uin, pdv, phoneNumber, contactPerson, email } = req.body;
+  const { name, uin, pdv, phoneNumber, contactPerson, email, materials } =
+    req.body;
   const newSupplier = new Supplier({
     name,
     uin,
@@ -21,6 +23,7 @@ exports.createSupplier = async (req, res) => {
     contactPerson,
     email,
     dateOfStart: Date.now(),
+    materials,
   });
   try {
     await newSupplier.save();
@@ -33,7 +36,7 @@ exports.getSingleSupplier = async (req, res) => {
   const id = req.params.id;
   let supplier;
   try {
-    supplier = await Supplier.findById(id);
+    supplier = await Supplier.findById(id).populate("materials");
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

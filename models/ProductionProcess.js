@@ -11,11 +11,9 @@ const productionProcessScheme = new mongoose.Schema({
   },
   endDate: {
     type: Date,
-    required: true,
   },
   price: {
     type: Number,
-    required: true,
   },
   products: [
     {
