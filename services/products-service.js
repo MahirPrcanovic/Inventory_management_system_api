@@ -1,6 +1,6 @@
 // import Product from "../models/Product";
 const Product = require("../models/Product");
-
+const ProductionProcess = require("../models/ProductionProcess");
 exports.getAllProducts = async (req, res) => {
   let products;
   try {
@@ -12,24 +12,31 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.createNewProduct = async (req, res) => {
-  const { name, picUrl, price, profitMargin, productionProcess } = req.body;
+  let returnItem;
+  const { name, picUrl, profitMargin, productionProcess } = req.body;
   const newProduct = new Product({
     name,
     picUrl,
-    price,
     profitMargin,
     productionProcess,
   });
   try {
-    await newProduct.save();
+    const foundProcess = await ProductionProcess.findById(productionProcess);
+    newProduct.price =
+      foundProcess.price + foundProcess.price * (profitMargin / 100);
+    returnItem = await (await newProduct.save()).populate("productionProcess");
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
-  return res.status(201).json({ newProduct });
+  return res.status(201).json({ returnItem });
 };
 
 exports.updateProduct = async (req, res) => {
   try {
+    if (req.body.price)
+      return res
+        .status(400)
+        .json({ message: "You can't change price of product." });
     const updatedItem = await Product.findByIdAndUpdate(
       req.params.id,
       req.params.body
