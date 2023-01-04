@@ -11,8 +11,8 @@ const userScheme = new mongoose.Schema({
     required: true,
   },
   role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Role",
+    type: String,
+    default: "USER",
   },
   employee: {
     type: mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcryptjs");
+const { findById } = require("../models/User");
 const MAX_AGE = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -39,5 +40,62 @@ exports.login = async (req, res) => {
     return res.status(200).json({ user: user._id });
   } catch (err) {
     return res.status(400).json({ message: err.message });
+  }
+};
+exports.logout = async (req, res) => {
+  res.cookie("jwt", "", { maxAge: 1 });
+  return res.status(200).json({ message: "success" });
+};
+
+exports.editUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    if (req.body.role || req.body.employee)
+      return res
+        .status(400)
+        .json({ message: "You cannot edit role or employeeID" });
+    if (req.body.passHash) {
+      const salt = await bcrypt.genSalt();
+      req.body.passHash = await bcrypt.hash(req.body.passHash, salt);
+    }
+    const user = await User.findByIdAndUpdate(id, req.body);
+    if (!user)
+      return res.status(404).json({ message: "User could not be found." });
+    return res.status(200).json({ user });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  const token = req.cookies.jwt;
+  let id = null;
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+      if (err)
+        return res
+          .status(403)
+          .json({ message: "You are not authorized for this route." });
+      id = decodedToken.id;
+    });
+    const userToChange = await User.findById(id);
+    if (!userToChange)
+      return res.status(400).json({ message: "User could not be found." });
+    try {
+      const user = await User.login(
+        userToChange.userName,
+        req.body.oldPassword
+      );
+      if (req.body.newPassword) {
+        const salt = await bcrypt.genSalt();
+        req.body.passHash = await bcrypt.hash(req.body.newPassword, salt);
+      }
+      const updatedUser = await User.findByIdAndUpdate(id, req.body);
+      return res.status(200).json({ user: user._id });
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };
