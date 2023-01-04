@@ -2,6 +2,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
+const Employee = require("../models/Employee");
 const MAX_AGE = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -9,7 +10,8 @@ const createToken = (id) => {
   });
 };
 exports.signup = async (req, res) => {
-  const { userName, password } = req.body;
+  const { userName, password, firstName, lastName, phoneNumber, email } =
+    req.body;
   let existingUser;
   let savedUser;
   existingUser = await User.findOne({ userName });
@@ -20,9 +22,17 @@ exports.signup = async (req, res) => {
     userName,
     passHash: password,
   });
-
+  const newEmployee = new Employee({
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    dateOfJoin: Date.now(),
+  });
   try {
-    savedUser = await createdUser.save();
+    const employee = await newEmployee.save();
+    createdUser.employee = employee._id;
+    savedUser = await (await createdUser.save()).populate("employee");
     const token = createToken(savedUser._id);
     res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 1000 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda, traje 3 dana, brise se poslije tog
   } catch (err) {
