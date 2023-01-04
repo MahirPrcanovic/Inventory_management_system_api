@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const { isEmail } = require("validator");
 const employeeScheme = new mongoose.Schema({
   firstName: {
     type: String,
@@ -15,7 +15,8 @@ const employeeScheme = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please enter a email."],
+    validate: [isEmail, "Please enter a valid email."],
   },
   dateOfJoin: {
     type: Date,
