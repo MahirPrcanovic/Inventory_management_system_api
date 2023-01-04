@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const userService = require("../services/user-service");
-
-router.post("/signup", userService.signup);
+const { adminCheck, requireAuth } = require("../middlewares/authMiddleware");
+router.post("/signup", adminCheck, userService.signup);
 router.post("/login", userService.login);
-router.get("/logout", userService.logout);
-router.patch("/:id", userService.editUser);
-router.patch("/changePass/:id", userService.changePassword);
+router.get("/logout", requireAuth, userService.logout);
+router.patch("/:id", adminCheck, userService.editUser);
+router.patch("/changePass/:id", requireAuth, userService.changePassword);
 module.exports = router;

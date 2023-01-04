@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { findById } = require("../models/User");
 const Employee = require("../models/Employee");
+const { adminCheck } = require("../middlewares/authMiddleware");
 const MAX_AGE = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
