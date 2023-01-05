@@ -110,3 +110,25 @@ exports.changePassword = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+exports.getAllUsers = async (req, res) => {
+  let users;
+  try {
+    users = await User.find({}).select("userName role");
+    return res.status(200).json({ users });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+exports.getSingleUser = async (req, res) => {
+  const id = req.params.id;
+  let user;
+  try {
+    user = await User.findById(id).populate("employee");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+  if (!user) {
+    return res.status(404).json({ message: "No user found" });
+  }
+  return res.status(200).json({ user });
+};
