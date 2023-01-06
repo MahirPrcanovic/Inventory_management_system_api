@@ -12,7 +12,8 @@ exports.getAllMaterials = async (req, res) => {
   }
 };
 exports.createNewMaterial = async (req, res) => {
-  const {
+  let message = null;
+  let {
     name,
     quantity,
     minQuantity,
@@ -21,6 +22,11 @@ exports.createNewMaterial = async (req, res) => {
     supplierId,
     price,
   } = req.body;
+  if (quantity < minQuantity) {
+    message =
+      "Please place an order for this material since it is below minimal quantity.";
+    quantity = minQuantity + 1;
+  }
   const newMaterial = new Material({
     name,
     quantity,
@@ -35,7 +41,7 @@ exports.createNewMaterial = async (req, res) => {
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
-  return res.status(201).json({ newMaterial });
+  return res.status(201).json({ newMaterial, message });
 };
 
 exports.getSingleMaterial = async (req, res) => {
@@ -54,7 +60,33 @@ exports.getSingleMaterial = async (req, res) => {
 exports.updateMaterial = async (req, res) => {
   const id = req.params.id;
   let updatedMaterial;
+  let message = null;
   try {
+    const item = await Material.findById(id);
+    if (req.body.minQuantity && req.body.quantity) {
+      if (req.body.quantity < req.body.minQuantity) {
+        //Napraviti narudzbu prema dostavljacu
+        message =
+          "Please place an order for this material since it is below minimal quantity.";
+        req.body.quantity = req.body.minQuantity + 1;
+      }
+    }
+    if (req.body.minQuantity) {
+      if (item.quantity < req.body.minQuantity) {
+        //Napraviti narudzbu prema dostavljacu
+        message =
+          "Please place an order for this material since it is below minimal quantity.";
+        req.body.quantity = item.quantity + 1;
+      }
+    }
+    if (req.body.quantity) {
+      if (req.body.quantity < item.minQuantity) {
+        //Napraviti narudzbu prema dostavljacu
+        message =
+          "Please place an order for this material since it is below minimal quantity.";
+        req.body.quantity = item.minQuantity + 1;
+      }
+    }
     updatedMaterial = await Material.findByIdAndUpdate(id, req.body, {
       new: true,
     });
@@ -64,5 +96,5 @@ exports.updateMaterial = async (req, res) => {
   if (!updatedMaterial) {
     return res.status(404).json({ message: "Material not found." });
   }
-  return res.status(200).json({ updatedMaterial });
+  return res.status(200).json({ updatedMaterial, message });
 };
