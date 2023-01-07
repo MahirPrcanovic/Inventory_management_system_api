@@ -24,6 +24,7 @@ const materialSchema = new mongoose.Schema({
   isUsed: {
     type: Boolean,
     required: true,
+    default: true,
   },
   supplier: {
     type: mongoose.Schema.Types.ObjectId,

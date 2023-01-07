@@ -30,8 +30,8 @@ const adminCheck = async (req, res, next) => {
   });
   if (good) {
     const user = await User.findById(userID);
-    console.log(user.role);
-    if (user.role === "ADMIN") next();
+    // console.log(user.role);
+    if (user?.role === "ADMIN") next();
     else
       res
         .status(403)

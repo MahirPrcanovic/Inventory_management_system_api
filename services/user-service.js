@@ -1,9 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { findById } = require("../models/User");
 const Employee = require("../models/Employee");
-const { adminCheck } = require("../middlewares/authMiddleware");
 const MAX_AGE = 3 * 24 * 60 * 60;
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -47,7 +45,7 @@ exports.login = async (req, res) => {
   try {
     const user = await User.login(userName, password);
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 1000 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda, traje 3 dana, brise se poslije tog
+    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 10 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda
     return res.status(200).json({ user: user._id });
   } catch (err) {
     return res.status(400).json({ message: err.message });
