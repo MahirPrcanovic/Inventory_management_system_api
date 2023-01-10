@@ -49,7 +49,7 @@ exports.getSingleMaterial = async (req, res) => {
   const id = req.params.id;
   let material;
   try {
-    material = await Material.findById(id);
+    material = await Material.findById(id).populate("supplier");
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
