@@ -33,7 +33,8 @@ exports.signup = async (req, res) => {
     createdUser.employee = employee._id;
     savedUser = await (await createdUser.save()).populate("employee");
     const token = createToken(savedUser._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 1000 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda, traje 3 dana, brise se poslije tog
+    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 100 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda, traje 3 dana, brise se poslije tog
+    res.cookie("logged", "logged", { maxAge: MAX_AGE * 100 });
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
@@ -45,7 +46,8 @@ exports.login = async (req, res) => {
   try {
     const user = await User.login(userName, password);
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 10 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda
+    res.cookie("jwt", token, { httpOnly: true, maxAge: MAX_AGE * 100 }); //postavi cookie jwt, token, samo ce se moci pristupiti njemu sa backenda
+    res.cookie("logged", "logged", { maxAge: MAX_AGE * 100 });
     return res.status(200).json({ user: user._id });
   } catch (err) {
     return res.status(400).json({ message: err.message });
