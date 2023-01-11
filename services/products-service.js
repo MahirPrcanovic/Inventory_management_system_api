@@ -62,18 +62,3 @@ exports.getSingleProduct = async (req, res) => {
   }
   return res.status(200).json({ product1 });
 };
-
-exports.deleteProduct = async (req, res) => {
-  const id = req.params.id;
-
-  let product1;
-  try {
-    product1 = await Product.findByIdAndRemove(id);
-  } catch (err) {
-    return console.log(err);
-  }
-  if (!product1) {
-    return res.status(500).json({ message: "Unable to delete" });
-  }
-  return res.status(200).json({ message: "Successfully delete" });
-};

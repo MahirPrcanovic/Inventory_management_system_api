@@ -8,6 +8,4 @@ router.get("/", productService.getAllProducts);
 router.post("/", productService.createNewProduct);
 router.patch("/:id", productService.updateProduct);
 router.get("/:id", productService.getSingleProduct);
-router.delete("/:id", productService.deleteProduct);
-
 module.exports = router;
