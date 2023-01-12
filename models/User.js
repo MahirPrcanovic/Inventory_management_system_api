@@ -8,7 +8,7 @@ const userScheme = new mongoose.Schema({
   },
   passHash: {
     type: String,
-    required: true,
+    required: [true, "Password must be set."],
   },
   role: {
     type: String,

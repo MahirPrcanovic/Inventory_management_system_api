@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const productionProcessScheme = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, "Name must be set."],
   },
   startDate: {
     type: Date,

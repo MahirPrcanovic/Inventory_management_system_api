@@ -3,15 +3,15 @@ const { isEmail } = require("validator");
 const employeeScheme = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true,
+    required: [true, "First name must be set."],
   },
   lastName: {
     type: String,
-    required: true,
+    required: [true, "Last name must be set."],
   },
   phoneNumber: {
     type: String,
-    required: true,
+    required: [true, "Phone number must be set."],
   },
   email: {
     type: String,

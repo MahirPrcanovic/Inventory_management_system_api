@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const productionProcessItemScheme = new mongoose.Schema({
   quantity: {
     type: Number,
-    required: true,
+    required: [true, "Quantity must be set."],
   },
   productionProcesses: [
     {

@@ -3,23 +3,23 @@ const mongoose = require("mongoose");
 const materialSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, "Name must be set."],
   },
   quantity: {
     type: Number,
-    required: true,
+    required: [true, "Quantity must be set."],
   },
   minQuantity: {
     type: Number,
-    required: true,
+    required: [true, "Minimal quantity must be set."],
   },
   price: {
     type: Number,
-    required: true,
+    required: [true, "Price must be set."],
   },
   unitOfMeasure: {
     type: String,
-    required: true,
+    required: [true, "Unit of measure must be set."],
   },
   isUsed: {
     type: Boolean,
