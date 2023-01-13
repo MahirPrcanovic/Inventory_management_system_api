@@ -53,7 +53,7 @@ exports.updateSupplier = async (req, res) => {
       new: true,
     });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
   if (!updatedSupplier) {
     return res.status(404).json({ message: "Supplier not found." });
