@@ -60,3 +60,12 @@ exports.updateSupplier = async (req, res) => {
   }
   return res.status(200).json({ updatedSupplier });
 };
+//For dropdown meni on frontend
+exports.getOnlyIDS = async (req, res) => {
+  try {
+    const suppliers = await Supplier.find({}).select("name");
+    return res.status(200).json(suppliers);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};

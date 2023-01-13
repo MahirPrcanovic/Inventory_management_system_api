@@ -4,13 +4,13 @@ const requireAuth = async (req, res, next) => {
   const token = req.cookies.jwt;
   if (!token)
     res.status(403).json({ message: "You are not authorized for this route." });
-  jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err)
-      res
+      return res
         .status(401)
         .json({ message: "You are not authorized for this route." });
-    next();
   });
+  next();
 };
 const adminCheck = async (req, res, next) => {
   const token = req.cookies.jwt;
@@ -18,11 +18,11 @@ const adminCheck = async (req, res, next) => {
   let good = false;
   if (!token)
     res.status(401).json({ message: "You are not authorized for this route." });
-  jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     good = false;
     userID = null;
     if (err)
-      res
+      return res
         .status(401)
         .json({ message: "You are not authorized for this route." });
     good = true;
