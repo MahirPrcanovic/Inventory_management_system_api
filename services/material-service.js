@@ -12,6 +12,7 @@ exports.getAllMaterials = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
 exports.createNewMaterial = async (req, res) => {
   let message = null;
   let {
@@ -112,4 +113,12 @@ exports.deleteProduct = async (req, res) => {
     return res.status(500);
   }
   return res.status(200).json({ message: "Successfully delete" });
+};
+exports.getMaterialsForList = async (req, res) => {
+  try {
+    const materials = await Material.find({}).select("name");
+    return res.status(200).json(materials);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
