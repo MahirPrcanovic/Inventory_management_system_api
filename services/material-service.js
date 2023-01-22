@@ -1,5 +1,5 @@
 const Material = require("../models/Material");
-
+const Supplier = require("../models/Supplier");
 exports.getAllMaterials = async (req, res) => {
   let materials;
   try {
@@ -40,6 +40,11 @@ exports.createNewMaterial = async (req, res) => {
   });
   try {
     await newMaterial.save();
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      supplierId,
+      { $push: { materials: newMaterial._id } },
+      { new: true }
+    );
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
