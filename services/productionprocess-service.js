@@ -43,9 +43,14 @@ exports.createNewProcess = async (req, res) => {
       populate: { path: "material" },
     });
     let price = 0;
-    createdItem.productionProcessItems.map(
-      (item) => (price += item.quantity * item.material.price)
-    );
+    createdItem.productionProcessItems.map(async (item) => {
+      await ProductionProcess.findByIdAndUpdate(
+        item,
+        { $push: { productionProcesses: createdItem._id } },
+        { new: true }
+      );
+      return (price += item.quantity * item.material.price);
+    });
     createdItem.price = price;
     await createdItem.save();
     return res.status(200).json({ createdItem });

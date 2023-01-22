@@ -22,9 +22,16 @@ exports.createNewProduct = async (req, res) => {
   });
   try {
     const foundProcess = await ProductionProcess.findById(productionProcess);
+    if (!foundProcess) return res.status(400).json({ message: "Bad request" });
     newProduct.price =
       foundProcess.price + foundProcess.price * (profitMargin / 100);
+
     returnItem = await (await newProduct.save()).populate("productionProcess");
+    await ProductionProcess.findByIdAndUpdate(
+      productionProcess,
+      { $push: { products: returnItem._id } },
+      { new: true }
+    );
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
